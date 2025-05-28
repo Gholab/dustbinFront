@@ -26,14 +26,13 @@ const EcoFriendlyGraph: React.FC<EcoFriendlyGraphProps> = ({ data }) => {
         textColor="white"
         textSize={12}
         showValuesAsLabels
-
       />
       {/* légende */}
       <View style={styles.legendContainer}>
         {data.map((item, index) => (
             <View key={index} style={styles.legendItem}> 
                 <View style={[styles.colorBox, { backgroundColor: item.color}]}/>
-                <Text>{item.label}</Text>
+                <Text>{item.label} - {item.value}%</Text>
             </View>
         ))}
       </View>

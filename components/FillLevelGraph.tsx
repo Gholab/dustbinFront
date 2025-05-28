@@ -22,7 +22,7 @@ const FillLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
           label: item.timestamp.slice(5),
           frontColor: item.fill_level >= 80 ? 'red' : '#82ca9d',
         }))}
-        barWidth={15}
+        barWidth={20}
         noOfSections={5}
         barBorderRadius={4}
         yAxisThickness={0}

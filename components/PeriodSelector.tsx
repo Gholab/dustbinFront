@@ -9,33 +9,50 @@ interface PeriodSelectorProps {
 
 const PeriodSelector: React.FC<PeriodSelectorProps> = ({ selected, onChange }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Select period:</Text>
-      <Picker
-        selectedValue={selected}
-        style={styles.picker}
-        onValueChange={onChange}
-      >
-        <Picker.Item label="All" value="all" />
-        <Picker.Item label="Day" value="day" />
-        <Picker.Item label="Month" value="month" />
-        <Picker.Item label="Year" value="year" />
-      </Picker>
+    <View style={styles.wrapper}>
+      <Text style={styles.label}>Select period</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={selected}
+          onValueChange={onChange}
+          style={styles.picker}
+          dropdownIconColor="#555"
+        >
+          <Picker.Item label="All" value="all" />
+          <Picker.Item label="Day" value="day" />
+          <Picker.Item label="Month" value="month" />
+          <Picker.Item label="Year" value="year" />
+        </Picker>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     marginBottom: 20,
+    alignItems: 'center',
+    width: '100%',
   },
   label: {
-    fontWeight: 'bold',
-    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+  },
+  pickerContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    overflow: 'hidden',
+    width: '80%',
+    elevation: 2,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   picker: {
     height: 50,
-    width: 200,
+    width: '100%',
   },
 });
 
