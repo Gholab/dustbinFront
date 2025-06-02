@@ -19,7 +19,7 @@ const BatteryLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
       <Text style={styles.title}>Battery Level Overview</Text>
       <LineChart
         data={data.map((item) => ({
-          value: item.fill_level,
+          value: item.battery_level,
           label: item.timestamp.slice(5),
           dataPointColor: '#8884d8',
         }))}
