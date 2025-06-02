@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { StyleSheet, Text, View, Alert, Button } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 import React, { useState } from 'react';
 import ConnectButton from '@/components/ConnectButton';
 import BinStats from '@/components/BinStats';
@@ -11,27 +11,23 @@ export default function HomePage() {
 
   const handleConnectedChange = (connected: boolean) => {
     setConnected(connected);
-    if (connected) {
-      // tu pourrais aussi fetcher ou lire BLE ici
-      setFillLevel(74);
-      setBatteryLevel(91);
-    }
   };
 
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/logoTransparent.png')} style={styles.logo} />
+      
 
       {!connected && (
         <>
+          <Image source={require('../../assets/images/logoTransparent.png')} style={styles.logo} />
           <Text style={styles.title}>Welcome to SmartBin</Text>
           <Text style={styles.subtitle}>Your smart waste assistant</Text>
         </>
       )}
       
 
-      <ConnectButton onConnectedChange={handleConnectedChange}/>
+      <ConnectButton onConnectedChange={handleConnectedChange} setBatteryLevel={setBatteryLevel} setFillLevel={setFillLevel}/>
       
       {connected && (
         <BinStats fillLevel={fillLevel} batteryLevel={batteryLevel} />
