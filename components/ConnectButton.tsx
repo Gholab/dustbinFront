@@ -3,12 +3,13 @@ import {
   Alert,
   Button,
   NativeEventEmitter,
-  NativeModules,
   PermissionsAndroid,
   Platform,
-  TouchableOpacity,
-  View,
   StyleSheet,
+  Touchable,
+  TouchableOpacity,
+  Text,
+  View
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
 
@@ -38,7 +39,7 @@ export default function ConnectButton({
     // ✅ Détection de périphérique BLE
     BleManager.onDiscoverPeripheral((peripheral: any) => {
       if (
-        peripheral.name === "SmartTrash_Simple" &&
+        peripheral.name === "Z Flip5 de Hajar" &&
         !didConnect.current
       ) {
         didConnect.current = true; // bloquer les doublons
@@ -134,7 +135,7 @@ export default function ConnectButton({
     }
     fillLvl = Math.min(Math.max(fillLvl, 0), 30); // Clamp between 0 and 25
     fillLvl = (30 - fillLvl)/30 * 100; // Convert to percentage
-    fetch('http://172.16.0.85:3000/measurements', {
+    fetch('http://192.168.1.49:3000/measurements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -215,11 +216,11 @@ export default function ConnectButton({
 
   return (
     <View style={styles.container}>
-      <Button
-        title={connected ? 'Disconnect from SmartBin' : 'Connect to SmartBin'}
-        onPress={handlePress}
-        color={connected ? '#4CAF50' : '#00796B'}
-      />
+      <TouchableOpacity onPress={handlePress} >
+        <Text style={[styles.txtButtons,  { backgroundColor: connected ? '#4CAF50' : '#5cb360'}]}>
+          {connected ? 'Disconnect from SmartBin' : 'Connect to SmartBin'}
+        </Text>
+      </TouchableOpacity>
   
     {connected && (
       <>
@@ -249,5 +250,13 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 8, // ou plus selon besoin
+  },
+  txtButtons: {
+    textAlign: 'center',
+    padding: 10,
+    fontSize: 20,
+    color: '#fff',
+    backgroundColor: '#5cb360', // Couleur de fond du bouton
+    borderRadius: 18, // Pour arrondir les coins
   },
 });

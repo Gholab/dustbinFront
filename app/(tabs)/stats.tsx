@@ -19,7 +19,11 @@ const fixedData = [
 { timestamp: '2025-05-19T17:25', fill_level: 85, battery_level: 55 },
 { timestamp: '2025-05-28T15:00', fill_level: 20, battery_level: 40 },
 { timestamp: '2025-05-29T16:00', fill_level: 25, battery_level: 40 },
-{ timestamp: '2025-05-29T19:00', fill_level: 50, battery_level: 15 }
+{ timestamp: '2025-05-29T19:00', fill_level: 50, battery_level: 15 },
+{ timestamp: '2025-06-02T15:10', fill_level: 70, battery_level: 95 },
+{ timestamp: '2025-06-02T17:25', fill_level: 85, battery_level: 55 },
+{ timestamp: '2025-06-03T15:00', fill_level: 20, battery_level: 40 },
+{ timestamp: '2025-06-03T16:00', fill_level: 25, battery_level: 25 },
 
 ];
 
@@ -37,7 +41,11 @@ const wasteData = [
     { timestamp: '2025-05-28T19:00', label: 'Eco-friendly' },
     { timestamp: '2025-05-28T15:00', label: 'Eco-friendly'},
     { timestamp: '2025-05-29T16:00', label: 'Non Eco-friendly' },
-    { timestamp: '2025-05-29T19:00', label: 'Eco-friendly'}
+    { timestamp: '2025-05-29T19:00', label: 'Eco-friendly'},
+    { timestamp: '2025-06-02T19:00', label: 'Eco-friendly' },
+    { timestamp: '2025-06-02T15:00', label: 'Eco-friendly'},
+    { timestamp: '2025-06-03T16:00', label: 'Eco-friendly' },
+    { timestamp: '2025-06-03T16:00', label: 'Eco-friendly'}
 ];
 
 export default function StatsPage() {
