@@ -3,7 +3,9 @@ import AlertCard from "@/components/AlertCard";
 
 export default function alertPage() {
     return (
-        <View style={{ flex: 1, backgroundColor: "#faf3d5" }}>
+        <View style={{ flex: 1, backgroundColor: "#faf3d5", padding: 10 }}>
+            <Text style={{ fontSize: 24, fontWeight: "bold", color: "#1B4332", marginBottom: 10, textAlign: "center" }}>
+                Alerts</Text>
             <AlertCard
                 type="warning"
                 title="Trash Detected"
