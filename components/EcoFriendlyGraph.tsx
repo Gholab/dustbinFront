@@ -33,8 +33,9 @@ const EcoFriendlyGraph: React.FC<EcoFriendlyGraphProps> = ({ data }) => {
         focusOnPress
         showText
         textColor="white"
-        textSize={12}
+        textSize={16}
         showValuesAsLabels
+        innerCircleColor="#E0EABA"
       />
       {/* légende */}
       <View style={styles.legendContainer}>
@@ -52,15 +53,15 @@ const EcoFriendlyGraph: React.FC<EcoFriendlyGraphProps> = ({ data }) => {
 const styles = StyleSheet.create({
   pieContainer: {
     alignItems: 'center',
-    marginTop: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#e0eaba',
     padding: 16,
     borderRadius: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#1B4332',
   },
   legendContainer: {
     marginTop: 16,

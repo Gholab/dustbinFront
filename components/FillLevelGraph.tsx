@@ -29,7 +29,7 @@ const FillLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
         data={data.map((item) => ({
           value: item.fill_level,
           label: item.timestamp.slice(5),
-          frontColor: item.fill_level >= 80 ? 'red' : '#82ca9d',
+          frontColor: item.fill_level >= 80 ? 'red' : 'green',
         }))}
         barWidth={20}
         noOfSections={5}
@@ -44,15 +44,15 @@ const FillLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#E0EABA',
     borderRadius: 8,
-    marginVertical: 12,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 12,
     textAlign: 'center',
+    color: '#1B4332',
   },
 });
 

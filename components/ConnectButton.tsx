@@ -209,7 +209,7 @@ export default function ConnectButton({
     } catch (e) {
       Alert.alert('Error', 'Bluetooth connection failed.');
       console.error(e);
-    }
+  } 
   };
 
   const dustBinActions = (actionNumber: number) => {
@@ -220,33 +220,16 @@ export default function ConnectButton({
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePress} >
-        <Text style={[styles.txtButtons,  { backgroundColor: connected ? '#4CAF50' : '#5cb360'}]}>
+        <Text style={[styles.txtButtons,  { backgroundColor: connected ? '#c94b4b' : '#4CAF50'}]}>
           {connected ? 'Disconnect from SmartBin' : 'Connect to SmartBin'}
         </Text>
       </TouchableOpacity>
-  
-    {connected && (
-      <>
-        <View style={styles.spacer} />
-        <Button  title="Reset state" onPress={() => dustBinActions(0)} disabled={!connected} />
-    
-        <View style={styles.spacer} />
-        <Button title="Call dustbin" onPress={() => dustBinActions(1)} disabled={!connected} />
-    
-        <View style={styles.spacer} />
-        <Button title="Opening" onPress={() => dustBinActions(2)} disabled={!connected} />
-    
-        <View style={styles.spacer} />
-        <Button title="Close" onPress={() => dustBinActions(3)} disabled={!connected} />
-      </>
-    )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     justifyContent: 'center',
     alignItems: 'stretch', // pour que les boutons prennent toute la largeur
     gap: 1, // si tu utilises React Native >= 0.71
@@ -257,9 +240,8 @@ const styles = StyleSheet.create({
   txtButtons: {
     textAlign: 'center',
     padding: 10,
-    fontSize: 20,
+    fontSize: 18,
     color: '#fff',
-    backgroundColor: '#5cb360', // Couleur de fond du bouton
     borderRadius: 18, // Pour arrondir les coins
   },
 });

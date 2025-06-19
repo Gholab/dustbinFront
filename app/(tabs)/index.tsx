@@ -2,8 +2,8 @@ import { Image } from 'expo-image';
 import { StyleSheet, Text, View} from 'react-native';
 import React, { useState } from 'react';
 import ConnectButton from '@/components/ConnectButton';
-import BinStats from '@/components/BinStats';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import InfoBox from '@/components/InfoBox';
+import IconButton from '@/components/IconButton';
 
 export default function HomePage() {
   const [connected, setConnected] = useState(false);
@@ -17,37 +17,51 @@ export default function HomePage() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
-        <Image
+        <View style={styles.welcomeContainer}>
+          <Image
           source={require('../../assets/images/logoTransparent.png')}
-          style={styles.logo}
-        />
-        <Text style={styles.welcome}>Welcome User</Text>
-
-        <View style={styles.infoBox}>
-          <View style={styles.infoHeader}>
-            <MaterialIcons name="info" size={30} color="#1B4332" />
-            <Text style={styles.infoTitle}>Information:</Text>
-          </View>
-          <View style={styles.statusRow}>
-            <View style={styles.infos}>
-              <Text style={styles.statusLabel}>Status:</Text>
-              <Text style={[styles.statusText, { color: connected ? '#2E7D32' : '#D32F2F' }]}>
-                {connected ? 'Connected' : 'Disconnected'}{' '}
-              </Text>
-              <MaterialIcons
-                name={connected ? 'check-circle' : 'cancel'}
-                size={16}
-                color={connected ? '#2E7D32' : '#D32F2F'}
-              />
-            </View>
-            {connected && (
-              <BinStats fillLevel={fillLevel} batteryLevel={batteryLevel} />
-            )}
-          </View>
+          style={styles.logo}/>
+          <Text style={styles.welcome}>Welcome User</Text>
         </View>
-        <ConnectButton onConnectedChange={handleConnectedChange} setBatteryLevel={setBatteryLevel} setFillLevel={setFillLevel}/>
-      </View>
+          <InfoBox connected={connected} batteryLevel={batteryLevel} fillLevel={fillLevel} />
+          {
+            connected  && (
+              <>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingVertical: 5, gap:20, marginTop: 10}}>
+                <IconButton 
+                  iconName="battery-charging"
+                  label="Move to Charging Station"
+                  onPress={() => console.log('Charging')}
+                />
+                <IconButton
+                  iconName="map-marker"
+                  label="Move towards User"
+                  onPress={() => console.log('Moving')}
+                />
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingVertical: 10, gap:20}}>
+                <IconButton 
+                  iconName="lock-open-outline"
+                  label="Open SmartBin"
+                  onPress={() => console.log('Open SmartBin')}
+                />
+                <IconButton
+                  iconName="lock-outline"
+                  label="Close SmartBin"
+                  onPress={() => console.log('Close SmartBin')}
+                />
+              </View>
+              </>
+            )
+          }
+      <View style={{ marginTop: 10 }}>
+        <ConnectButton
+          onConnectedChange={handleConnectedChange}
+          setBatteryLevel={setBatteryLevel}
+          setFillLevel={setFillLevel}
+        />
+²     </View>
+            
     </View>
   );
 }
@@ -55,62 +69,25 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
-    justifyContent: 'center', 
     alignItems: 'center',
     backgroundColor: "#faf3d5",
   },
+  welcomeContainer: {
+    paddingTop: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 5,
+  },
   logo: {
-    width: 100,
-    height: 100,
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
   },
   welcome: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 16,
-  },
-  infoBox: {
-    backgroundColor: '#DFF0C2',
-    borderRadius: 10,
-    padding: 30,
-    width: '100%',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-    marginBottom: 40,
-  },
-  infoHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  infoTitle: {
-    marginLeft: 6,
-    fontWeight: 'bold',
     fontSize: 25,
-    color: '#1B4332',
-  },
-  statusRow: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  infos:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  statusLabel: {
-    fontWeight: '600',
-    marginRight: 4,
-    fontSize: 20,
-  },
-  statusText: {
-    fontWeight: '600',
-    marginRight: 4,
-    fontSize: 20,
-  },
+    color: '#004d25',
+  }
+
 });

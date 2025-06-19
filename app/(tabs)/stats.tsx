@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, Text} from 'react-native';
+import { StyleSheet, ScrollView, Text, View} from 'react-native';
 import FillLevelGraph from '@/components/FillLevelGraph';
 import BatteryLevelGraph from '@/components/BatteryLevelGraph';
 import EcoFriendyGraph from '@/components/EcoFriendlyGraph';
@@ -94,8 +94,7 @@ export default function StatsPage() {
     }
   ] : [];
   return (   
-    <ScrollView >
-      <Text style={styles.title}>Statistics</Text>
+    <ScrollView style={{ flex: 1, padding: 20, backgroundColor: '#faf3d5' }}>
       <PeriodSelector selected={period} onChange={setPeriod} />
       <FillLevelGraph data={filteredData} />
       <BatteryLevelGraph data={filteredData} />
@@ -103,9 +102,3 @@ export default function StatsPage() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-    title: {
-        fontSize: 26, fontWeight: 'bold', marginBottom: 10, textAlign: 'center', color: '#333', paddingTop: 50
-    }
-});

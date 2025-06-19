@@ -30,12 +30,12 @@ const BatteryLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
         data={data.map((item) => ({
           value: item.battery,
           label: item.timestamp.slice(5),
-          dataPointColor: '#8884d8',
+          dataPointColor: 'green',
         }))}
         noOfSections={5}
         yAxisThickness={0}
         xAxisThickness={0}
-        color="#8884d8"
+        color="green"
         curved
         
       />
@@ -46,7 +46,7 @@ const BatteryLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#E0EABA',
     borderRadius: 8,
     marginVertical: 12,
   },
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     textAlign: 'center',
+    color: '#1B4332',
   },
 });
 
