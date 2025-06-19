@@ -60,7 +60,7 @@ export default function HomePage() {
           setBatteryLevel={setBatteryLevel}
           setFillLevel={setFillLevel}
         />
-²     </View>
+     </View>
             
     </View>
   );

@@ -68,6 +68,9 @@ export default function StatsPage() {
     return true; 
   });
 
+  console.log(filteredData.length, 'filtered data length');
+  
+
   const filteredWaste = wasteData.filter((item) => {
     const date = new Date(item.timestamp);
     const now = new Date();
