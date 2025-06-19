@@ -76,6 +76,9 @@ export default function ConnectButton({
   // ✅ Permissions Android BLE
   const requestPermissions = async () => {
     if (Platform.OS === 'android' && Platform.Version >= 31) {
+      
+      await BleManager.enableBluetooth();
+
       const granted = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
@@ -135,7 +138,7 @@ export default function ConnectButton({
     }
     fillLvl = Math.min(Math.max(fillLvl, 0), 30); // Clamp between 0 and 25
     fillLvl = (30 - fillLvl)/30 * 100; // Convert to percentage
-    fetch('http://192.168.1.49:3000/measurements', {
+    fetch('http://192.168.1.70:3000/measurements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

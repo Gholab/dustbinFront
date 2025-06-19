@@ -13,6 +13,15 @@ interface EcoFriendlyGraphProps {
 }
 
 const EcoFriendlyGraph: React.FC<EcoFriendlyGraphProps> = ({ data }) => {
+  if (!data || data.length === 0) {
+    return (
+      <View style={styles.pieContainer}>
+        <Text style={styles.title}>Waste Type Breakdown</Text>
+        <Text>No data available</Text>
+      </View>
+    );
+  }
+  
   return (
     <View style={styles.pieContainer}>
       <Text style={styles.title}>Waste Type Breakdown</Text>

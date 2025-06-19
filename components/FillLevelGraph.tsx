@@ -13,6 +13,15 @@ interface FillLevelGraphProps {
 }
 
 const FillLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
+  if (!data || data.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Fill Level Overview</Text>
+        <Text>No data available</Text>
+      </View>
+    );
+  }
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Fill Level Overview</Text>
