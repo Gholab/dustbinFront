@@ -3,12 +3,13 @@ import {
   Alert,
   Button,
   NativeEventEmitter,
-  NativeModules,
   PermissionsAndroid,
   Platform,
-  TouchableOpacity,
-  View,
   StyleSheet,
+  Touchable,
+  TouchableOpacity,
+  Text,
+  View
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
 
@@ -18,12 +19,14 @@ type ConnectButtonProps = {
   onConnectedChange?: (connected: boolean) => void;
   setBatteryLevel?: (value: number) => void;
   setFillLevel?: (value: number) => void;
+  setDeviceConnected?: (device: any) => void;
 };
 
 export default function ConnectButton({
   onConnectedChange,
   setBatteryLevel,
   setFillLevel,
+  setDeviceConnected,
 }: ConnectButtonProps) {
   const [connected, setConnected] = useState(false);
   const [device, setDevice] = useState<any>(null);
@@ -50,6 +53,7 @@ export default function ConnectButton({
           console.log('✅ Connected to', peripheral.name);
           setDevice(peripheral);
           setConnected(true);
+          setDeviceConnected?.(peripheral);
           onConnectedChange?.(true);
           retrieveDeviceInfo(peripheral);
           Alert.alert('Connection', peripheral?.name +' connected!');
@@ -75,6 +79,9 @@ export default function ConnectButton({
   // ✅ Permissions Android BLE
   const requestPermissions = async () => {
     if (Platform.OS === 'android' && Platform.Version >= 31) {
+      
+      await BleManager.enableBluetooth();
+
       const granted = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
@@ -129,12 +136,12 @@ export default function ConnectButton({
     let [fillLvl, batteryLvl] = raw.split(",").map(s => parseInt(s.trim(), 10));
     
     if (isNaN(batteryLvl) || isNaN(fillLvl)) {
-      console.error('❌ Invalid measurement data:', raw);
+      //console.error('❌ Invalid measurement data:', raw);
       return;
     }
     fillLvl = Math.min(Math.max(fillLvl, 0), 30); // Clamp between 0 and 25
-    fillLvl = (30 - fillLvl)/30 * 100; // Convert to percentage
-    fetch('http://172.16.0.85:3000/measurements', {
+    fillLvl = Math.floor((30 - fillLvl)/30 * 100); // Convert to percentage
+    fetch('http://192.168.1.216:3000/measurements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -205,7 +212,7 @@ export default function ConnectButton({
     } catch (e) {
       Alert.alert('Error', 'Bluetooth connection failed.');
       console.error(e);
-    }
+    } 
   };
 
   const dustBinActions = (actionNumber: number) => {
@@ -215,34 +222,23 @@ export default function ConnectButton({
 
   return (
     <View style={styles.container}>
-      <Button
-        title={connected ? 'Disconnect from SmartBin' : 'Connect to SmartBin'}
-        onPress={handlePress}
-        color={connected ? '#4CAF50' : '#00796B'}
-      />
-  
-    {connected && (
-      <>
-        <View style={styles.spacer} />
-        <Button  title="Reset state" onPress={() => dustBinActions(0)} disabled={!connected} />
-    
-        <View style={styles.spacer} />
-        <Button title="Call dustbin" onPress={() => dustBinActions(1)} disabled={!connected} />
-    
-        <View style={styles.spacer} />
-        <Button title="Opening" onPress={() => dustBinActions(2)} disabled={!connected} />
-    
-        <View style={styles.spacer} />
-        <Button title="Close" onPress={() => dustBinActions(3)} disabled={!connected} />
-      </>
-    )}
+      <TouchableOpacity onPress={handlePress} >
+        <Text style={[styles.txtButtons,  { backgroundColor: connected ? '#c94b4b' : '#4CAF50'}]}>
+          {connected ? 'Disconnect from SmartBin' : 'Connect to SmartBin'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
+export const actionsOnDustbin = (actionNumber: number, device: any) => {
+  console.log(`🔧 Executing action ${actionNumber} on device ${device.name}`);
+  BleManager.write(device.id, "6e400001-b5a3-f393-e0a9-e50e24dcca9e", "6e400003-b5a3-f393-e0a9-e50e24dcca9e", Array.from(actionNumber.toString()).map(c => c.charCodeAt(0)));
+}
+
+
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     justifyContent: 'center',
     alignItems: 'stretch', // pour que les boutons prennent toute la largeur
     gap: 1, // si tu utilises React Native >= 0.71
@@ -250,4 +246,12 @@ const styles = StyleSheet.create({
   spacer: {
     height: 8, // ou plus selon besoin
   },
+  txtButtons: {
+    textAlign: 'center',
+    padding: 10,
+    fontSize: 18,
+    color: '#fff',
+    borderRadius: 18, // Pour arrondir les coins
+  },
 });
+

@@ -18,12 +18,11 @@ export default function BinStats({ fillLevel, batteryLevel }: BinStatsProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    marginTop: 10,
     padding: 20,
     borderRadius: 10,
     backgroundColor: '#f2f2f2',
-    width: '90%',
-    alignItems: 'center',
+    width: '100%',
   },
   title: {
     fontWeight: 'bold',

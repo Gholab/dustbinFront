@@ -6,7 +6,7 @@ import { LineChart } from 'react-native-gifted-charts';
 interface DataPoint {
   timestamp: string;
   fill_level: number;
-  battery_level: number;
+  battery: number;
 }
 
 interface FillLevelGraphProps {
@@ -14,19 +14,28 @@ interface FillLevelGraphProps {
 }
 
 const BatteryLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
+  if (!data || data.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Battery Level Overview</Text>
+        <Text>No data available</Text>
+      </View>
+    );
+  }
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Battery Level Overview</Text>
       <LineChart
         data={data.map((item) => ({
-          value: item.battery_level,
+          value: item.battery,
           label: item.timestamp.slice(5),
-          dataPointColor: '#8884d8',
+          dataPointColor: 'green',
         }))}
         noOfSections={5}
         yAxisThickness={0}
         xAxisThickness={0}
-        color="#8884d8"
+        color="green"
         curved
         
       />
@@ -37,7 +46,7 @@ const BatteryLevelGraph: React.FC<FillLevelGraphProps> = ({ data }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#E0EABA',
     borderRadius: 8,
     marginVertical: 12,
   },
@@ -46,6 +55,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     textAlign: 'center',
+    color: '#1B4332',
   },
 });
 
