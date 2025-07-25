@@ -19,12 +19,14 @@ type ConnectButtonProps = {
   onConnectedChange?: (connected: boolean) => void;
   setBatteryLevel?: (value: number) => void;
   setFillLevel?: (value: number) => void;
+  setDeviceConnected?: (device: any) => void;
 };
 
 export default function ConnectButton({
   onConnectedChange,
   setBatteryLevel,
   setFillLevel,
+  setDeviceConnected,
 }: ConnectButtonProps) {
   const [connected, setConnected] = useState(false);
   const [device, setDevice] = useState<any>(null);
@@ -39,7 +41,7 @@ export default function ConnectButton({
     // ✅ Détection de périphérique BLE
     BleManager.onDiscoverPeripheral((peripheral: any) => {
       if (
-        peripheral.name === "Z Flip5 de Hajar" &&
+        peripheral.name === "SmartTrash_Simple" &&
         !didConnect.current
       ) {
         didConnect.current = true; // bloquer les doublons
@@ -51,6 +53,7 @@ export default function ConnectButton({
           console.log('✅ Connected to', peripheral.name);
           setDevice(peripheral);
           setConnected(true);
+          setDeviceConnected?.(peripheral);
           onConnectedChange?.(true);
           retrieveDeviceInfo(peripheral);
           Alert.alert('Connection', peripheral?.name +' connected!');
@@ -133,12 +136,12 @@ export default function ConnectButton({
     let [fillLvl, batteryLvl] = raw.split(",").map(s => parseInt(s.trim(), 10));
     
     if (isNaN(batteryLvl) || isNaN(fillLvl)) {
-      console.error('❌ Invalid measurement data:', raw);
+      //console.error('❌ Invalid measurement data:', raw);
       return;
     }
     fillLvl = Math.min(Math.max(fillLvl, 0), 30); // Clamp between 0 and 25
-    fillLvl = (30 - fillLvl)/30 * 100; // Convert to percentage
-    fetch('http://192.168.1.70:3000/measurements', {
+    fillLvl = Math.floor((30 - fillLvl)/30 * 100); // Convert to percentage
+    fetch('http://192.168.1.216:3000/measurements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -209,7 +212,7 @@ export default function ConnectButton({
     } catch (e) {
       Alert.alert('Error', 'Bluetooth connection failed.');
       console.error(e);
-  } 
+    } 
   };
 
   const dustBinActions = (actionNumber: number) => {
@@ -228,6 +231,12 @@ export default function ConnectButton({
   );
 }
 
+export const actionsOnDustbin = (actionNumber: number, device: any) => {
+  console.log(`🔧 Executing action ${actionNumber} on device ${device.name}`);
+  BleManager.write(device.id, "6e400001-b5a3-f393-e0a9-e50e24dcca9e", "6e400003-b5a3-f393-e0a9-e50e24dcca9e", Array.from(actionNumber.toString()).map(c => c.charCodeAt(0)));
+}
+
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -245,3 +254,4 @@ const styles = StyleSheet.create({
     borderRadius: 18, // Pour arrondir les coins
   },
 });
+

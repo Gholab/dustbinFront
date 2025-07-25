@@ -44,7 +44,7 @@ export default function StatsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://192.168.1.70:3000/measurements'); // adapte l’URL si besoin
+        const res = await fetch('http://192.168.1.216:3000/measurements'); // adapte l’URL si besoin
         const json = await res.json();
         setData(json);
       } catch (err) {

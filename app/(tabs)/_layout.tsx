@@ -49,7 +49,13 @@ export default function TabLayout() {
           tabBarIcon: () => <IconSymbol size={28} name="bell" color={"#faf3d5"} />,
         }}
       />
-
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: 'Green chatbot',
+          tabBarIcon: () => <IconSymbol size={28} name="bot" color={"#faf3d5"} />,
+        }}
+      />
     </Tabs>
   );
 }
