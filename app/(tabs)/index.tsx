@@ -37,8 +37,8 @@ export default function HomePage() {
                 />
                 <IconButton
                   iconName="map-marker"
-                  label={ moving ? "Move towards User" : "Stop Moving"}
-                  onPress={() => {console.log('Moving'); actionsOnDustbin(1, device);}}
+                  label={ !moving ? "Move towards User" : "Stop Moving"}
+                  onPress={() => {console.log('Moving'); actionsOnDustbin(1, device); moving ? setMoving(false) : setMoving(true);}}
                 />
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingVertical: 10, gap:20}}>

@@ -89,7 +89,7 @@ export default function ChatScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🌿 EcoBot</Text>
+      <Text style={styles.title}>🌿 EcoBot 🌿</Text>
 
       <TextInput
         style={styles.input}
@@ -99,16 +99,14 @@ export default function ChatScreen() {
       />
 
       <TouchableOpacity onPress={handleSubmit}>
-		<View style={styles.Button}>
-		  <Text style={{ color: "#00796B", fontWeight: "bold", fontSize: 20 }}>Ask EcoBot</Text>
-		</View>
-	  </TouchableOpacity>
+        <View style={styles.Button}>
+          <Text style={{ color: "#00796B", fontWeight: "bold", fontSize: 20 }}>Ask EcoBot</Text>
+        </View>
+      </TouchableOpacity>
 	
-
-      {loading && <ActivityIndicator size="large" color="#00796B" style={{ margin: 20 }} />}
-
       <ScrollView style={styles.responseBox}>
-        <Text>{response}</Text>
+        {loading && <ActivityIndicator size="large" color="#00796B" style={{ margin: 20 }} />}
+        <Text style={styles.textResponse}>{response}</Text>
       </ScrollView>
     </View>
   );
@@ -149,7 +147,10 @@ const styles = StyleSheet.create({
 	  backgroundColor: '#e0eaba',
 	  padding: 15,
 	  borderRadius: 10,
-	  maxHeight: 300,
 	},
-  });
+  textResponse: {
+    fontSize: 18,
+    lineHeight: 24,
+  },
+});
   

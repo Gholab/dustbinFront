@@ -189,8 +189,8 @@ export default function ConnectButton({
       //console.error('❌ Invalid measurement data:', raw);
       return;
     }
-    fillLvl = Math.min(Math.max(fillLvl, 0), 24); // Clamp between 0 and 25
-    fillLvl = Math.floor((24 - fillLvl)/24 * 100); // Convert to percentage
+    fillLvl = Math.min(Math.max(fillLvl, 0), 22); // Clamp between 0 and 22
+    fillLvl = Math.floor((22 - fillLvl)/22 * 100); // Convert to percentage
     fetch('http://192.168.1.216:3000/measurements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
