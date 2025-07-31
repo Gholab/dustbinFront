@@ -42,7 +42,7 @@ export default function ChatScreen() {
             {
               role: "system",
               content:`
-	  Tu es EcoBot, un assistant IA spécialisé en développement durable et écologie. 
+	  Tu es EcoBot, un assistant IA spécialisé en développement durable et écologie au Vietnam. 
       Tes domaines d'expertise incluent :
       - Développement durable et objectifs de développement durable (ODD)
       - Écologie et protection de l'environnement

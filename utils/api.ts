@@ -1,7 +1,7 @@
 import Constants from "expo-constants"
 
 export const generateAPIUrl = (relativePath: string) => {
-  const origin = Constants.experienceUrl?.replace("exp://", "http://") || "http://192.168.1.216:8081"
+  const origin = Constants.experienceUrl?.replace("exp://", "http://") || "http://backendsmartbin-production.up.railway.app"
   const path = relativePath.startsWith("/") ? relativePath : `/${relativePath}`
     console.log(`Origin: ${origin}, Path: ${path}`)
   if (process.env.NODE_ENV === "development") {

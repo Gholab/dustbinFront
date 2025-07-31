@@ -73,7 +73,7 @@ export default function ConnectButton({
             } catch (e) {
               console.error('❌ Error reading measurement:', e);
             }
-          }, 300);
+          }, 1000);
 
         console.log('⏱️  Polling started @ 300ms');
 
@@ -191,7 +191,7 @@ export default function ConnectButton({
     }
     fillLvl = Math.min(Math.max(fillLvl, 0), 22); // Clamp between 0 and 22
     fillLvl = Math.floor((22 - fillLvl)/22 * 100); // Convert to percentage
-    fetch('http://192.168.1.216:3000/measurements', {
+    fetch('http://backendsmartbin-production.up.railway.app/measurements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
