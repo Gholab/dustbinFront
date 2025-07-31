@@ -1,7 +1,4 @@
 import SustainableChatbot from "@/components/Chatbot"
-import { generateAPIUrl } from "@/utils/api"
-import { openai } from "@ai-sdk/openai"
-import { streamText } from "ai"
 
 // Permet les réponses en streaming jusqu'à 30 secondes
 export const maxDuration = 30
