@@ -75,7 +75,7 @@ export default function ConnectButton({
             }
           }, 1000);
 
-        console.log('⏱️  Polling started @ 300ms');
+          console.log('⏱️  Polling started @ 300ms');
 
           console.log('🔔 Notifications started');
           // retrieveDeviceInfo(peripheral);
