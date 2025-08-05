@@ -1,11 +1,9 @@
-import { StyleSheet, ScrollView, Text, View, Switch} from 'react-native';
+import { ScrollView, View} from 'react-native';
 import FillLevelGraph from '@/components/FillLevelGraph';
 import BatteryLevelGraph from '@/components/BatteryLevelGraph';
 import EcoFriendyGraph from '@/components/EcoFriendlyGraph';
 import React, { useEffect, useState } from 'react';
 import PeriodSelector from '@/components/PeriodSelector';
-import { WebView } from 'react-native-webview';
-import ViewLoraApp from '@/components/ViewLoraApp';
 
 
 
@@ -43,8 +41,6 @@ export default function StatsPage() {
   const [period, setPeriod] = useState('all');
   const [data, setData] = useState<Measurement[]>([]);
   const [loading, setLoading] = useState(true);
-  const [seeWebview, setSeeWebview] = useState(false);
-  const toggleSwitch = () => {setSeeWebview(!seeWebview); console.log('Webview toggled:', !seeWebview);};
 
   useEffect(() => {
     async function fetchData() {
@@ -103,18 +99,8 @@ export default function StatsPage() {
   ] : [];
   return (
     <View>
-      <Switch
-        trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={seeWebview ? '#f5dd4b' : '#f4f3f4'}
-        onValueChange={toggleSwitch}
-        value={seeWebview}
-      />
 
-      {seeWebview && (
-        <ViewLoraApp />
-      )}
-
-      {!seeWebview && (
+      {(
         <ScrollView style={{backgroundColor: '#faf3d5' }}>
           <PeriodSelector selected={period} onChange={setPeriod} />
           <FillLevelGraph data={filteredData} />
@@ -124,10 +110,4 @@ export default function StatsPage() {
     )}
     </View>
   );
-  /* <ScrollView style={{ flex: 1, padding: 20, backgroundColor: '#faf3d5' }}>
-      <PeriodSelector selected={period} onChange={setPeriod} />
-      <FillLevelGraph data={filteredData} />
-      <BatteryLevelGraph data={filteredData} />
-      <EcoFriendyGraph data={pieData} />
-    </ScrollView>*/
 }

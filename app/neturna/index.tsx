@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import WebView from "react-native-webview";
 
 const jsCode = `
@@ -15,7 +15,7 @@ export default function ViewLoraApp() {
   return (
     <SafeAreaView style={styles.container}>
       <WebView
-        source={{ uri: 'http://3.27.181.13' }}
+        source={{ uri: 'https://neturna.nytuo.fr/' }}
         style={styles.webview}
 				injectedJavaScript={jsCode}
 				javaScriptEnabled={true}
@@ -27,7 +27,7 @@ export default function ViewLoraApp() {
 
 const styles = StyleSheet.create({
   container: {
-		height: '1000',
+    height: '100%',
 	},
   title: {
     textAlign: 'center',
