@@ -1,9 +1,12 @@
 import { Image } from 'expo-image';
-import { StyleSheet, Text, View} from 'react-native';
-import React, { useState } from 'react';
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React, { useRef, useState } from 'react';
 import ConnectButton, { actionsOnDustbin } from '@/components/ConnectButton';
 import InfoBox from '@/components/InfoBox';
 import IconButton from '@/components/IconButton';
+import { Picker } from '@react-native-picker/picker';
+import { Button } from '@react-navigation/elements';
+import { useAlert } from '@/components/AlertContext';
 
 export default function HomePage() {
   const [connected, setConnected] = useState(false);
@@ -11,9 +14,33 @@ export default function HomePage() {
   const [batteryLevel, setBatteryLevel] = useState(90);
   const [device, setDevice] = useState<any>(null);
   const [moving, setMoving] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [garbageType, setGarbageType] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const { addAlert } = useAlert();
+
+  const handleBinFull = () => {
+    console.log('Bin is full, please empty it!');
+    addAlert("warning", "Bin Full", "The bin is full, please empty it!");
+  };
 
   const handleConnectedChange = (connected: boolean) => {
     setConnected(connected);
+  };
+
+  const handleSubmit = () => {
+    console.log('Type:', garbageType, 'Quantity:', quantity);
+    fetch('https://backendsmartbin-production.up.railway.app/trashInfos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        device_id: 'bin01',
+        type: garbageType,
+        quantity: quantity,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+    setIsModalVisible(false); // fermer le modal après envoi
   };
 
 
@@ -50,7 +77,11 @@ export default function HomePage() {
                 <IconButton
                   iconName="lock-outline"
                   label="Close SmartBin"
-                  onPress={() => {console.log('Close SmartBin'); actionsOnDustbin(2, device);}}
+                  onPress={() => {
+                    console.log('Close SmartBin'); 
+                    actionsOnDustbin(2, device);
+                    setIsModalVisible(true);
+                  }}
                 />
               </View>
               </>
@@ -62,8 +93,50 @@ export default function HomePage() {
           setBatteryLevel={setBatteryLevel}
           setFillLevel={setFillLevel}
           setDeviceConnected={setDevice}
+          onBinFull={handleBinFull}
         />
-     </View>
+      </View>
+
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="slide" // ou "fade"
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add Garbage Info</Text>
+
+            <Picker
+              selectedValue={garbageType}
+              onValueChange={(itemValue) => setGarbageType(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Plastic ♻️" value="plastic" />
+              <Picker.Item label="Glass 🍾" value="glass" />
+              <Picker.Item label="Paper 📄" value="paper" />
+              <Picker.Item label="Metal 🥫" value="metal" />
+              <Picker.Item label="Organic 🌱" value="organic" />
+              <Picker.Item label="Other 🗑️" value="other" />
+            </Picker>
+            <TextInput
+              placeholder="Quantity (in grams)"
+              value={quantity}
+              onChangeText={setQuantity}
+              keyboardType="numeric"
+              style={styles.input}
+            />
+
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitText}>Submit</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
             
     </View>
   );
@@ -91,6 +164,55 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 25,
     color: '#004d25',
-  }
-
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    width: '80%',
+    borderRadius: 12,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#CCC',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+  },
+  submitButton: {
+    backgroundColor: '#1B4332',
+    padding: 12,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  submitText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  cancelText: {
+    color: '#E63946',
+    marginTop: 5,
+  },
+  picker: {
+    width: '100%',
+    marginBottom: 15,
+  },
 });

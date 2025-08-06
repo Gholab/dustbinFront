@@ -1,5 +1,6 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 type AlertType = 'warning' | 'error' ;
 
@@ -9,9 +10,10 @@ interface AlertCardProps {
   message: string;
   date: string;
   time: string;
+  onRemove: () => void;
 }
 
-const AlertCard: React.FC<AlertCardProps> = ({ type, title, message, date, time }) => {
+const AlertCard: React.FC<AlertCardProps> = ({ type, title, message, date, time, onRemove }) => {
   const backgroundColor = type === 'warning' ? '#f7cb87' : '#e8a6a1';
   const titleColor = type === 'warning' ? '#7a4f01' : '#7a1212';
 
@@ -23,6 +25,9 @@ const AlertCard: React.FC<AlertCardProps> = ({ type, title, message, date, time 
           <Text style={styles.date}>{date}</Text>
           <Text style={styles.time}>{time}</Text>
         </View>
+        <TouchableOpacity onPress={onRemove}>
+            <MaterialIcons name="close" size={20} color="#333" />
+        </TouchableOpacity>
       </View>
       <Text style={styles.message}>{message}</Text>
     </View>
