@@ -24,6 +24,7 @@ type ConnectButtonProps = {
   setBatteryLevel?: (value: number) => void;
   setFillLevel?: (value: number) => void;
   setDeviceConnected?: (device: any) => void;
+  onBinFull?: () => void; // Callback pour alerte de poubelle pleine
 };
 
 export default function ConnectButton({
@@ -31,6 +32,7 @@ export default function ConnectButton({
   setBatteryLevel,
   setFillLevel,
   setDeviceConnected,
+  onBinFull,
 }: ConnectButtonProps) {
   const [connected, setConnected] = useState(false);
   const [device, setDevice] = useState<any>(null);
@@ -39,6 +41,9 @@ export default function ConnectButton({
   const didConnect = useRef(false); // ✅ Pour bloquer la détection multiple
   const notifSub = useRef<ReturnType<typeof BleManagerEmitter.addListener> | null>(null);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
+  const [consecutiveFull, setConsecutiveFull] = useState(0);
+  const [notified, setNotified] = useState(false);
+
 
   useEffect(() => {
     BleManager.start({ showAlert: false });
@@ -49,11 +54,11 @@ export default function ConnectButton({
     // ✅ Détection de périphérique BLE
     BleManager.onDiscoverPeripheral((peripheral: any) => {
       if (
-        peripheral.name === "SmartTrash_Simple" &&
+        peripheral.name === "Z Flip5 de Hajar" &&
         !didConnect.current
       ) {
         didConnect.current = true; // bloquer les doublons
-        console.log('📡 Found:', peripheral);
+        console.log('📡 Found:', peripheral);        
 
         setIsScanning(false);
         console.log("peripheral.id", peripheral.id);
@@ -66,10 +71,10 @@ export default function ConnectButton({
           await BleManager.retrieveServices(peripheral.id);
           pollRef.current = setInterval(async () => {
             try {
-              const bytes: number[] = await BleManager.read(peripheral.id, MEAS_SERVICE, MEAS_CHAR_RX);
+              /*const bytes: number[] = await BleManager.read(peripheral.id, MEAS_SERVICE, MEAS_CHAR_RX);
               const str = Buffer.from(bytes).toString('ascii');
-              console.log('♻️  FILL FROM DEVICE:', str);
-              sendMeasurement(peripheral.id, str); // si tu veux garder ton POST + setFillLevel
+              console.log('♻️  FILL FROM DEVICE:', "3");*/
+              sendMeasurement(peripheral.id, "3"); // si tu veux garder ton POST + setFillLevel
             } catch (e) {
               console.error('❌ Error reading measurement:', e);
             }
@@ -191,6 +196,14 @@ export default function ConnectButton({
     }
     fillLvl = Math.min(Math.max(fillLvl, 0), 22); // Clamp between 0 and 22
     fillLvl = Math.floor((22 - fillLvl)/22 * 100); // Convert to percentage
+
+    if (fillLvl > 70) {
+      setConsecutiveFull(prev => prev + 1);
+    } else {
+      setConsecutiveFull(0);
+      setNotified(false);
+    }
+
     fetch('http://backendsmartbin-production.up.railway.app/measurements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -251,6 +264,13 @@ export default function ConnectButton({
     }
 
   }
+
+  useEffect(() => {
+    if (consecutiveFull >= 5 && !notified) {
+      onBinFull?.();
+      setNotified(true);
+    }
+  }, [consecutiveFull, notified]);
 
   const handlePress = async () => {
     console.log('🔘 Button pressed, toggling connection...');
