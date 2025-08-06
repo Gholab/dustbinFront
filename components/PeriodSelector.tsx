@@ -15,7 +15,7 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ selected, onChange }) =
         <Picker
           selectedValue={selected}
           onValueChange={onChange}
-          style={styles.picker}
+          style={[styles.picker, { color: 'black' }]}
           dropdownIconColor="#555"
         >
           <Picker.Item label="All" value="all" />
@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
+    marginTop: 5
   },
   picker: {
-    height: 50,
+    height: 55,
     width: '100%',
   },
 });

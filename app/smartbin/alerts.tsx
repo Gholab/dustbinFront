@@ -21,7 +21,7 @@ export default function AlertPage() {
       </Text>
 
       <ScrollView>
-        {alerts.reverse().map((alert, index) => (
+        {[...alerts].reverse().map((alert, index) => (
           <AlertCard
             key={index}
             type={alert.type}
@@ -29,7 +29,7 @@ export default function AlertPage() {
             message={alert.message}
             date={alert.date}
             time={alert.time}
-            onRemove={() => removeAlert(index)}
+            onRemove={() => removeAlert(alerts.length - 1 - index)}
           />
         ))}
       </ScrollView>

@@ -17,14 +17,12 @@ const BleManagerEmitter = new NativeEventEmitter(NativeModules.BleManager);
 const MEAS_SERVICE = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const MEAS_CHAR_RX = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'; // NOTIFY
 
-
-
 type ConnectButtonProps = {
   onConnectedChange?: (connected: boolean) => void;
   setBatteryLevel?: (value: number) => void;
   setFillLevel?: (value: number) => void;
   setDeviceConnected?: (device: any) => void;
-  onBinFull?: () => void; // Callback pour alerte de poubelle pleine
+  onBinFull?: () => void;
 };
 
 export default function ConnectButton({
@@ -37,8 +35,7 @@ export default function ConnectButton({
   const [connected, setConnected] = useState(false);
   const [device, setDevice] = useState<any>(null);
   const [isScanning, setIsScanning] = useState(false);
-  const [measurementServiceUUID, setMeasurementServiceUUID] = useState<string[]| undefined | null>(null);
-  const didConnect = useRef(false); // ✅ Pour bloquer la détection multiple
+  const didConnect = useRef(false);
   const notifSub = useRef<ReturnType<typeof BleManagerEmitter.addListener> | null>(null);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
   const [consecutiveFull, setConsecutiveFull] = useState(0);
@@ -48,16 +45,14 @@ export default function ConnectButton({
   useEffect(() => {
     BleManager.start({ showAlert: false });
     console.log('🔌 Bluetooth Manager started');
-    
-
 
     // ✅ Détection de périphérique BLE
     BleManager.onDiscoverPeripheral((peripheral: any) => {
       if (
-        peripheral.name === "Z Flip5 de Hajar" &&
+        peripheral.name === "SmartTrash_Simple" &&
         !didConnect.current
       ) {
-        didConnect.current = true; // bloquer les doublons
+        didConnect.current = true; 
         console.log('📡 Found:', peripheral);        
 
         setIsScanning(false);
@@ -71,16 +66,16 @@ export default function ConnectButton({
           await BleManager.retrieveServices(peripheral.id);
           pollRef.current = setInterval(async () => {
             try {
-              /*const bytes: number[] = await BleManager.read(peripheral.id, MEAS_SERVICE, MEAS_CHAR_RX);
+              const bytes: number[] = await BleManager.read(peripheral.id, MEAS_SERVICE, MEAS_CHAR_RX);
               const str = Buffer.from(bytes).toString('ascii');
-              console.log('♻️  FILL FROM DEVICE:', "3");*/
-              sendMeasurement(peripheral.id, "3"); // si tu veux garder ton POST + setFillLevel
+              console.log('♻️  FILL FROM DEVICE:', str);
+              sendMeasurement(peripheral.id, str);
             } catch (e) {
               console.error('❌ Error reading measurement:', e);
             }
           }, 1000);
 
-        console.log('⏱️  Polling started @ 300ms');
+          console.log('⏱️  Polling started @ 300ms');
 
           console.log('🔔 Notifications started');
           // retrieveDeviceInfo(peripheral);
@@ -220,57 +215,13 @@ export default function ConnectButton({
     setFillLevel?.(fillLvl);    
   };
 
-  const retrieveDeviceInfo = async (peripheral: any) => {
-    try {
-      const servicesInfo = await BleManager.retrieveServices(peripheral.id);
-      console.log("📋 All services and characteristics:", servicesInfo);
-      setMeasurementServiceUUID(servicesInfo.advertising?.serviceUUIDs);
-      
-      let measurement = "";
-      for (const c of servicesInfo.characteristics) {
-        if (c.properties.Read) {
-          try {
-            const value = await BleManager.read(peripheral.id, c.service, c.characteristic);
-
-            let decodedValue;
-            try {
-              decodedValue = String.fromCharCode(...value);
-            } catch {
-              decodedValue = value; // fallback brut si binaire
-            }
-
-            console.log(servicesInfo.advertising?.serviceUUIDs);
-            
-            if (c.service == servicesInfo.advertising?.serviceUUIDs?.toString()) {
-              console.log(`📏 Measurement characteristic found in service ${c.service}:`, c.characteristic);              
-              measurement = decodedValue.toString();
-            }
-
-            console.log(`✅ [Service ${c.service}] Characteristic ${c.characteristic}:`, decodedValue);
-          } catch (error) {
-            console.log(`❌ Failed to read characteristic ${c.characteristic} of service ${c.service}:`, error);
-          }
-        } else {
-          console.log(`⏩ [Service ${c.service}] Characteristic ${c.characteristic} is not readable.`);
-        }
-      }
-
-      console.log(`📊 Measurement from ${peripheral.name}:`, measurement);
-      
-      sendMeasurement(peripheral, measurement); // ✅ utilise le bon périphérique
-
-    } catch (error) {
-      console.error('❌ Error retrieving device info:', error);
-    }
-
-  }
-
   useEffect(() => {
     if (consecutiveFull >= 5 && !notified) {
       onBinFull?.();
       setNotified(true);
     }
   }, [consecutiveFull, notified]);
+
 
   const handlePress = async () => {
     console.log('🔘 Button pressed, toggling connection...');
@@ -287,11 +238,6 @@ export default function ConnectButton({
       console.error(e);
     } 
   };
-
-  const dustBinActions = (actionNumber: number) => {
-    console.log(`🔧 Executing action ${actionNumber} on SmartBin`);
-    BleManager.write(device.id, "6e400001-b5a3-f393-e0a9-e50e24dcca9e", "6e400003-b5a3-f393-e0a9-e50e24dcca9e", Array.from(actionNumber.toString()).map(c => c.charCodeAt(0)))
-  }
 
   return (
     <View style={styles.container}>

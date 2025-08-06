@@ -1,9 +1,10 @@
-import { StyleSheet, ScrollView, Text, View} from 'react-native';
+import { ScrollView, View} from 'react-native';
 import FillLevelGraph from '@/components/FillLevelGraph';
 import BatteryLevelGraph from '@/components/BatteryLevelGraph';
 import EcoFriendyGraph from '@/components/EcoFriendlyGraph';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PeriodSelector from '@/components/PeriodSelector';
+
 
 
 type Measurement = {
@@ -96,12 +97,17 @@ export default function StatsPage() {
       color: '#F44336'
     }
   ] : [];
-  return (   
-    <ScrollView style={{ flex: 1, padding: 20, backgroundColor: '#faf3d5' }}>
-      <PeriodSelector selected={period} onChange={setPeriod} />
-      <FillLevelGraph data={filteredData} />
-      <BatteryLevelGraph data={filteredData} />
-      <EcoFriendyGraph data={pieData} />
-    </ScrollView>
+  return (
+    <View>
+
+      {(
+        <ScrollView style={{backgroundColor: '#faf3d5' }}>
+          <PeriodSelector selected={period} onChange={setPeriod} />
+          <FillLevelGraph data={filteredData} />
+          <BatteryLevelGraph data={filteredData} />
+          <EcoFriendyGraph data={pieData} />
+        </ScrollView>
+    )}
+    </View>
   );
 }
