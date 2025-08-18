@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.gholab.DustbinApp'
+    namespace 'com.gholab.smartbin'
     defaultConfig {
-        applicationId 'com.gholab.DustbinApp'
+        applicationId 'com.gholab.smartbin'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
