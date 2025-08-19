@@ -3,8 +3,9 @@ import { View, Text, Button, ScrollView } from "react-native";
 import AlertCard from "@/components/AlertCard";
 import { useAlert } from "@/components/AlertContext";
 
+type AlertType = 'warning' | 'error' ;
 export default function AlertPage() {
-  const {alerts, removeAlert} = useAlert(); 
+  const {alerts, addAlert, removeAlert} = useAlert(); 
 
   return (
     <View style={{ flex: 1, backgroundColor: "#faf3d5", padding: 10 }}>
@@ -24,7 +25,7 @@ export default function AlertPage() {
         {[...alerts].reverse().map((alert, index) => (
           <AlertCard
             key={index}
-            type={alert.type}
+            type={alert.type as AlertType}
             title={alert.title}
             message={alert.message}
             date={alert.date}
