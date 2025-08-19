@@ -12,8 +12,6 @@ const env = Constants.expoConfig?.extra?.APP_ENV || "dev" ;
 
 const BASE_URL = env === "dev" ? apiBaseUrl : prodApiBaseUrl;
 
-console.log('BASE_URL:', BASE_URL);
-
 
 type Measurement = {
   device_id: string;
@@ -22,32 +20,17 @@ type Measurement = {
   battery: number;
 };
 
-const wasteData = [
-    { timestamp: '2025-01-10T08:30', label: 'Eco-friendly' },
-    { timestamp: '2025-01-15T12:00', label: 'Non Eco-friendly'},
-    { timestamp: '2025-02-03T14:15', label: 'Eco-friendly' },
-    { timestamp: '2025-02-20T09:45', label: 'Non Eco-friendly' },
-    { timestamp: '2025-03-11T18:30', label: 'Eco-friendly' },
-    { timestamp: '2025-03-25T10:00', label: 'Non Eco-friendly' },
-    { timestamp: '2025-04-05T11:20', label: 'Eco-friendly' },
-    { timestamp: '2025-04-17T13:50', label: 'Non Eco-friendly' },
-    { timestamp: '2025-05-02T15:10', label: 'Eco-friendly' },
-    { timestamp: '2025-05-19T17:25', label: 'Non Eco-friendly' },
-    { timestamp: '2025-05-28T19:00', label: 'Eco-friendly' },
-    { timestamp: '2025-05-28T15:00', label: 'Eco-friendly'},
-    { timestamp: '2025-05-29T16:00', label: 'Non Eco-friendly' },
-    { timestamp: '2025-05-29T19:00', label: 'Eco-friendly'},
-    { timestamp: '2025-06-02T19:00', label: 'Eco-friendly' },
-    { timestamp: '2025-06-02T15:00', label: 'Eco-friendly'},
-    { timestamp: '2025-06-03T16:00', label: 'Eco-friendly' },
-    { timestamp: '2025-06-03T16:00', label: 'Eco-friendly'},
-    { timestamp: '2025-06-19T16:00', label: 'Eco-friendly'},
-    { timestamp: '2025-06-03T16:00', label: 'Non Eco-friendly'}
-];
+type WasteData = {
+  device_id: string;
+  type: string;
+  quantity: number;
+  timestamp: string;
+};
 
 export default function StatsPage() {
   const [period, setPeriod] = useState('all');
   const [data, setData] = useState<Measurement[]>([]);
+  const [trashData, setTrashData] = useState<WasteData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -62,12 +45,22 @@ export default function StatsPage() {
         setLoading(false);
       }
     }
-
+    async function fetchTrashData() {
+      try{
+        const res = await fetch(`${BASE_URL}/trashInfos`);
+        const json = await res.json();
+        setTrashData(json);
+      } catch (err) {
+        console.error('Erreur lors du fetch des données de déchets :', err);
+      }
+    }
     fetchData();
+    fetchTrashData();
   }, []);
 
   console.log('Fetched data:', data.length);
-  
+  console.log('Fetched trash data:', trashData.length);
+
   const filteredData = data.filter((item) => {
     const date = new Date(item.timestamp);
     const now = new Date();
@@ -80,7 +73,7 @@ export default function StatsPage() {
   console.log(filteredData.length, 'filtered data length');
   
 
-  const filteredWaste = wasteData.filter((item) => {
+  const filteredWaste = trashData.filter((item) => {
     const date = new Date(item.timestamp);
     const now = new Date();
     if (period === 'day') return date.toDateString() === now.toDateString();
@@ -88,21 +81,50 @@ export default function StatsPage() {
     if (period === 'year') return date.getFullYear() === now.getFullYear();
     return true;
   });
+  const plasticCount = filteredWaste.filter(item => item.type === 'plastic').length;
+  const glassCount = filteredWaste.filter(item => item.type === 'glass').length;
+  const metalCount = filteredWaste.filter(item => item.type === 'metal').length;
+  const organicCount = filteredWaste.filter(item => item.type === 'organic').length;
+  const paperCount = filteredWaste.filter(item => item.type === 'paper').length;
+  const otherCount = filteredWaste.filter(item => item.type === '').length;
   
-  const ecoCount = filteredWaste.filter(item => item.label === 'Eco-friendly').length;
-  const nonEcoCount = filteredWaste.filter(item => item.label !== 'Eco-friendly').length;
-  
-  const total = ecoCount + nonEcoCount;
+
+  const total = plasticCount + glassCount + metalCount + organicCount + paperCount + otherCount;
   const pieData = total > 0 ? [
     {
-      label: 'Eco-friendly',
-      value: Math.round((ecoCount / total) * 100),
+      label: 'Organic',
+      value: Math.round((organicCount / total) * 100),
+      color: '#85d487ff'
+    },
+    {
+      label: 'Platic',
+      value: Math.round((plasticCount / total) * 100),
+      color: '#ffef75ff'
+    },
+    {
+      label: 'Glass',
+      value: Math.round((glassCount / total) * 100),
+      color: '#2196F3'
+    },
+    {
+      label: 'Metal',
+      value: Math.round((metalCount / total) * 100),
+      color: '#FFC107'
+    },
+    {
+      label: 'Organic',
+      value: Math.round((organicCount / total) * 100),
       color: '#4CAF50'
     },
     {
-      label: 'Non Eco-friendly',
-      value: Math.round((nonEcoCount / total) * 100),
-      color: '#F44336'
+      label: 'Paper',
+      value: Math.round((paperCount / total) * 100),
+      color: '#9C27B0'
+    },
+    {
+      label: 'Other',
+      value: Math.round((otherCount / total) * 100),
+      color: '#607D8B'
     }
   ] : [];
   return (
