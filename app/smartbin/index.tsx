@@ -7,6 +7,15 @@ import IconButton from '@/components/IconButton';
 import { Picker } from '@react-native-picker/picker';
 import { Button } from '@react-navigation/elements';
 import { useAlert } from '@/components/AlertContext';
+import Constants from 'expo-constants';
+
+const apiBaseUrl = Constants.expoConfig?.extra?.API_BASE_URL;
+const prodApiBaseUrl = Constants.expoConfig?.extra?.PROD_API_BASE_URL;
+const env = Constants.expoConfig?.extra?.APP_ENV || "dev" ;
+
+const BASE_URL = env === "dev" ? apiBaseUrl : prodApiBaseUrl;
+
+
 
 export default function HomePage() {
   const [connected, setConnected] = useState(false);
@@ -28,9 +37,8 @@ export default function HomePage() {
     setConnected(connected);
   };
 
-  const handleSubmit = () => {
-    console.log('Type:', garbageType, 'Quantity:', quantity);
-    fetch('https://backendsmartbin-production.up.railway.app/trashInfos', {
+  const handleSubmit = () => {    
+    fetch(`${BASE_URL}/trashInfos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

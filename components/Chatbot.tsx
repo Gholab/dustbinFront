@@ -15,8 +15,7 @@ import {
 
 
 
-// 👉 remplace ta vraie clé ici ou charge depuis Constants.expoConfig.extra...
-const OPENAI_API_KEY = Constants.expoConfig?.extra?.openaiApiKey;
+const OPENAI_API_KEY = Constants.expoConfig?.extra?.OPENAI_API_KEY || process.env.OPENAI_API_KEY;
 
 export default function ChatScreen() {
   const [input, setInput] = useState('');
@@ -27,7 +26,7 @@ export default function ChatScreen() {
     if (!input.trim()) return;
 
     setLoading(true);
-    setResponse('');
+    setResponse('');    
 
     try {
       const res = await fetch("https://api.openai.com/v1/chat/completions", {

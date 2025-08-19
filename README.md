@@ -1,50 +1,76 @@
-# Welcome to your Expo app 👋
+# DustbinApp 🗑️📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+SmartBin’s mobile application built with **React Native** and **Expo Router**.
+The app connects to smart bins via BLE, fetches data from the backend, and displays real-time alerts and statistics about trash fill levels.
 
-## Get started
+---
 
-1. Install dependencies
+## 📦 Requirements
 
-   ```bash
-   npm install
-   ```
+* [Node.js](https://nodejs.org/) (>= 18.x)
+* [Expo CLI](https://docs.expo.dev/get-started/installation/) (`npm install -g expo-cli`)
+* Android Studio / Xcode (if running on Android or iOS locally) with an ANDROID_HOME environment variable set to the SDK path
+* A [backend](https://github.com/eliotmnrt/backendSmartBin) instance deployed (NestJS + InfluxDB, e.g., on Railway)
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🚀 Installation
 
-In the output, you'll find options to open the app in a
+Clone the repository and install dependencies:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```sh
+git clone https://github.com/Gholab/dustbinFront
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## ⚙️ Environment Configuration
 
-To learn more about developing your project with Expo, look at the following resources:
+In your project root, create one files:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### `.env.local`
 
-## Join the community
+```ini
+OPENAI_API_KEY=your-local-api-key
+```
 
-Join our community of developers creating universal apps.
+Environment variables are loaded via `app.config.js` into `expo-constants`.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 🖥️ Run in Development
+
+The app uses environment variables for flexibility (`dev` vs `prod`).
+
+### Run with dev backend
+
+```sh
+npm run android:dev   # Launch on Android with dev version (backend on localhost:3000)
+```
+
+### Run with prod backend
+
+```sh
+npm run android:prod # Launch on Android with prod version (backend on https://smartbin-backend-production.up.railway.app)
+```
+
+---
+
+## 📱 Features
+
+* 🔗 Connect to SmartBins via **BLE**
+* 📊 Real-time monitoring of **fill levels** and **battery**
+* ⚠️ Alert system with persistent history (bin full, trash detected, etc.)
+* 🌐 Ecological chatbot assistant (**SmartBinBot**)
+* 📈 Data visualization with charts
+* 🔔 Local push notifications for critical alerts
+
+---
+
+## 📝 License
+This project is licensed under for the Danang International Institute of Technology
+
+## 👥 Contributing
+* [Hajar El Gholabzouri](https://github.com/Gholab)
+* [Eliot Menoret](https://github.com/eliotmnrt)
