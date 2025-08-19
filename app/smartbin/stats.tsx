@@ -12,8 +12,6 @@ const env = Constants.expoConfig?.extra?.APP_ENV || "dev" ;
 
 const BASE_URL = env === "dev" ? apiBaseUrl : prodApiBaseUrl;
 
-console.log('BASE_URL:', BASE_URL);
-
 
 type Measurement = {
   device_id: string;
@@ -49,7 +47,7 @@ export default function StatsPage() {
     }
     async function fetchTrashData() {
       try{
-        const res = await fetch('http://backendsmartbin-production.up.railway.app/trashInfos');
+        const res = await fetch(`${BASE_URL}/trashInfos`);
         const json = await res.json();
         setTrashData(json);
       } catch (err) {
