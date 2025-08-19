@@ -37,15 +37,18 @@ export default ({config}) => ({
       ]
     ],
     experiments: {
-      typedRoutes: true
+      typedRoutes: true 
     },
 
     assetBundlePatterns: ["**/*"],
     extra: {
-      router: {},
+      router: {}, 
       eas: {
         projectId: "5f6a6df9-8fa3-412a-8b53-ac7bd2b36a76"
       },
-      openaiApiKey: process.env.OPENAI_API_KEY,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      API_BASE_URL: process.env.API_BASE_URL,
+      PROD_API_BASE_URL: process.env.PROD_API_BASE_URL,
+      APP_ENV: process.env.APP_ENV,
     },
-  });
+  }); 

@@ -12,10 +12,17 @@ import {
   NativeModules
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
+import Constants from 'expo-constants';
 
 const BleManagerEmitter = new NativeEventEmitter(NativeModules.BleManager);
 const MEAS_SERVICE = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const MEAS_CHAR_RX = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'; // NOTIFY
+
+const apiBaseUrl = Constants.expoConfig?.extra?.API_BASE_URL;
+const prodApiBaseUrl = Constants.expoConfig?.extra?.PROD_API_BASE_URL;
+const env = Constants.expoConfig?.extra?.APP_ENV || "dev" ;
+
+const BASE_URL = env === "dev" ? apiBaseUrl : prodApiBaseUrl;
 
 type ConnectButtonProps = {
   onConnectedChange?: (connected: boolean) => void;
@@ -49,7 +56,7 @@ export default function ConnectButton({
     // ✅ Détection de périphérique BLE
     BleManager.onDiscoverPeripheral((peripheral: any) => {
       if (
-        peripheral.name === "SmartTrash_Simple" &&
+        peripheral.name === "Z Flip5 de Hajar" &&
         !didConnect.current
       ) {
         didConnect.current = true; 
@@ -199,7 +206,7 @@ export default function ConnectButton({
       setNotified(false);
     }
 
-    fetch('http://backendsmartbin-production.up.railway.app/measurements', {
+    fetch(`${BASE_URL}/measurements`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

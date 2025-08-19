@@ -4,7 +4,15 @@ import BatteryLevelGraph from '@/components/BatteryLevelGraph';
 import EcoFriendyGraph from '@/components/EcoFriendlyGraph';
 import React, { useEffect, useState } from 'react';
 import PeriodSelector from '@/components/PeriodSelector';
+import Constants from 'expo-constants';
 
+const apiBaseUrl = Constants.expoConfig?.extra?.API_BASE_URL;
+const prodApiBaseUrl = Constants.expoConfig?.extra?.PROD_API_BASE_URL;
+const env = Constants.expoConfig?.extra?.APP_ENV || "dev" ;
+
+const BASE_URL = env === "dev" ? apiBaseUrl : prodApiBaseUrl;
+
+console.log('BASE_URL:', BASE_URL);
 
 
 type Measurement = {
@@ -30,7 +38,7 @@ export default function StatsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://backendsmartbin-production.up.railway.app/measurements'); // battery and fill level
+        const res = await fetch(`${BASE_URL}/measurements`);
         const json = await res.json();
         setData(json);
       } catch (err) {
